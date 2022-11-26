@@ -1,0 +1,191 @@
+ls
+#lists complete files and directories
+ls-lrta 
+#gives the last updated file
+mkdir 
+#creates a new directory
+cd.. 
+#comes out of that particular directory
+vi file_name 
+#to create a new file
+chmod 7 
+#to change mode to user access
+pw 
+# present work
+pwd 
+#present working directory
+ctrl +l 
+#clears the screen
+rm -r directory_name 
+#Deletes directory
+history 
+#shows the total previous codes
+man  
+#shows information of commands
+copyFromLocal
+#Copy a file or directory from Local to HDFS
+moveFromLocal
+#move a file or directory from Local to HDFS
+touchz
+#can create n no: of empty files in HDFS
+rm 
+#Removes a file
+cat
+#Displays the content of a file
+
+
+hadoop fs -ls
+hadoop fs -ls Aarushi
+hadoop fs -rm -r Aarushi
+hadoop fs -mkdir aarushi
+pwd
+ls Desktop
+[cloudera@quickstart ~]$ hadoop fs -copyFromLocal /home/cloudera/Desktop/dept.csv aarushi/dept.csv
+[cloudera@quickstart ~]$ hadoop fs -ls aarushi
+[cloudera@quickstart ~]$ pig
+grunt> cd aarushi
+grunt> pwd
+grunt> A = load '/user/cloudera/aarushi/emp.csv' using PigStorage(',') as (eid:int,ename:chararray,epos:chararray,esal:int,ecom:int,edpno:int);
+grunt> dump A;
+grunt> describe
+grunt> B = filter A by epos=='CLERK';
+grunt> dump B;
+grunt> B1 = filter A by epos=='MANAGER' and edpno==20;
+grunt> dump B1;
+grunt> D = limit A 5;
+grunt> dump D;
+grunt> E = order A by eid;
+grunt> dump E;
+grunt> E = order A by eid desc;
+grunt> dump E;
+grunt> F = foreach A generate *, ecom * 3 as Bonus;
+grunt> dump F;
+grunt> F = foreach A generate *, ecom * 3 as Bonus, SUBSTRING(ename,0,3) as emailid;
+grunt> dump F;
+grunt> G = foreach F generate eid, $1;
+grunt> dump G;
+grunt> F = foreach A generate *, ecom * 2 as Bonus, esal * 5 as Incentive;
+grunt> dump F;
+grunt> G = foreach A generate SUBSTRING(ename,0,4);
+grunt> dump G;
+grunt> H = foreach A generate $0,$1;
+grunt> dump H;
+grunt> B = group A all;   
+grunt> C = foreach B generate MAX (A.esal);
+grunt> dump C;
+grunt> C = foreach B generate MIN (A.esal);
+grunt> dump C;
+grunt> C = foreach B generate COUNT (A.esal);
+grunt> dump C;
+grunt> I = group A by edpno;
+grunt> dump I;
+grunt> J = foreach I generate group as edpno, COUNT($1) as count;
+grunt> dump J;
+grunt> L = group A by(edpno,epos);
+grunt> dump L;
+SPLIT A into B if edpno==10, C if edpno==20, D if epos=='MANAGER';
+ A = load 'emp.csv' using PigStorage(',') as (eid:int,ename:chararray,epos:chararray,esal:int,ecom:int,edpno:int);
+
+ B = load 'dept.csv' using PigStorage(',') as(edpno:int,epos:chararray,ecity:chararray);
+(,epos,ecity)
+(10,ACCOUNTING,NEW YORK)
+(20,RESEARCH,DALLAS)
+(30,SALES,CHICAGO)
+(40,OPERATIONS,BOSTON)
+C = JOIN A by edpno, B by edpno;
+(7934,MILLER,CLERK,1300,,10,10,ACCOUNTING,NEW YORK)
+(7782,CLARK,MANAGER,2450,,10,10,ACCOUNTING,NEW YORK)
+(7839,KING,PRESIDENT,5000,,10,10,ACCOUNTING,NEW YORK)
+(7876,ADAMS,CLERK,1100,,20,20,RESEARCH,DALLAS)
+(7566,JONES,MANAGER,2975,,20,20,RESEARCH,DALLAS)
+(7369,SMITH,CLERK,800,,20,20,RESEARCH,DALLAS)
+(7788,SCOTT,ANALYST,3000,,20,20,RESEARCH,DALLAS)
+(7902,FORD,ANALYST,3000,,20,20,RESEARCH,DALLAS)
+(7521,WARD,SALESMAN,1250,500,30,30,SALES,CHICAGO)
+(7654,MARTIN,SALESMAN,1250,1400,30,30,SALES,CHICAGO)
+(7698,BLAKE,MANAGER,2850,,30,30,SALES,CHICAGO)
+(7900,JAMES,CLERK,950,,30,30,SALES,CHICAGO)
+(7844,TURNER,SALESMAN,1500,0,30,30,SALES,CHICAGO)
+(7499,ALLEN,SALESMAN,1600,300,30,30,SALES,CHICAGO)
+
+ D = foreach C generate A::eid,B::epos;
+(7934,ACCOUNTING)
+(7782,ACCOUNTING)
+(7839,ACCOUNTING)
+(7876,RESEARCH)
+(7566,RESEARCH)
+(7369,RESEARCH)
+(7788,RESEARCH)
+(7902,RESEARCH)
+(7521,SALES)
+(7654,SALES)
+(7698,SALES)
+(7900,SALES)
+(7844,SALES)
+(7499,SALES)
+
+ E = JOIN A by edpno RIGHT OUTER, B by edpno;
+(7934,MILLER,CLERK,1300,,10,10,ACCOUNTING,NEW YORK)
+(7782,CLARK,MANAGER,2450,,10,10,ACCOUNTING,NEW YORK)
+(7839,KING,PRESIDENT,5000,,10,10,ACCOUNTING,NEW YORK)
+(7876,ADAMS,CLERK,1100,,20,20,RESEARCH,DALLAS)
+(7566,JONES,MANAGER,2975,,20,20,RESEARCH,DALLAS)
+(7369,SMITH,CLERK,800,,20,20,RESEARCH,DALLAS)
+(7788,SCOTT,ANALYST,3000,,20,20,RESEARCH,DALLAS)
+(7902,FORD,ANALYST,3000,,20,20,RESEARCH,DALLAS)
+(7521,WARD,SALESMAN,1250,500,30,30,SALES,CHICAGO)
+(7654,MARTIN,SALESMAN,1250,1400,30,30,SALES,CHICAGO)
+(7698,BLAKE,MANAGER,2850,,30,30,SALES,CHICAGO)
+(7900,JAMES,CLERK,950,,30,30,SALES,CHICAGO)
+(7844,TURNER,SALESMAN,1500,0,30,30,SALES,CHICAGO)
+(7499,ALLEN,SALESMAN,1600,300,30,30,SALES,CHICAGO)
+(,,,,,,40,OPERATIONS,BOSTON)
+(,,,,,,,epos,ecity)
+
+
+
+HIVE
+hive
+hive> create table emp (eid int,ename string, epos string,esal int, ecom int, edpno int) row format delimited fields terminated by ',';
+hive> load data local inpath '/home/cloudera/Desktop/emp.csv' into table emp;
+hive> select*from emp;
+hive> create external table extemp(eid int, ename string,epos string,esal int, ecom int,edpno int) row format delimited fields terminated by ',' location '/user/cloudera/aarushi/emp';
+
+
+WORD COUNT PROBLEM
+cd Desktop
+vi textfi
+ls Desktop
+hadoop fs -copyFromLocal /home/cloudera/Desktop/textfi Aarushi/wordcount
+hadoop fs -ls
+pig
+cd Aarushi
+ls
+hdfs://quickstart.cloudera:8020/user/cloudera/Aarushi/wordcount<r 1>	46
+grunt> A = load 'wordcount' as (line:chararray);
+grunt> dump A;
+(Hi how are you)
+(hello what you doing)
+(thank you)
+grunt> token = foreach A generate TOKENIZE (line);
+grunt> dump token;
+({(Hi),(how),(are),(you)})
+({(hello),(what),(you),(doing)})
+({(thank),(you)})
+grunt> flat = foreach A generate FLATTEN ($0);
+grunt> dump flat;
+(Hi how are you)
+(hello what you doing)
+(thank you)
+grunt> groups = group flat by $0;
+grunt> dump groups;
+(thank you,{(thank you)})
+(Hi how are you,{(Hi how are you)})
+(hello what you doing,{(hello what you doing)})
+grunt> wc = foreach groups generate $0 as word, COUNT ($1) as freq;
+grunt> dump wc;
+(thank you,1)
+(Hi how are you,1)
+(hello what you doing,1)
+
+
